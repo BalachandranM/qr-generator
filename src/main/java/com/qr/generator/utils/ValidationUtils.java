@@ -1,8 +1,8 @@
-package com.qr.generator.util;
+package com.qr.generator.utils;
 
 import java.lang.reflect.InvocationTargetException;
 
-import com.qr.generator.exception.QrGenerationException;
+import com.qr.generator.exceptions.QrGenerationException;
 
 public class ValidationUtils {
 

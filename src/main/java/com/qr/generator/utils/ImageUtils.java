@@ -1,4 +1,4 @@
-package com.qr.generator.util;
+package com.qr.generator.utils;
 
 import java.awt.Graphics2D;
 import java.awt.Image;

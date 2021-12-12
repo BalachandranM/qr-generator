@@ -1,4 +1,4 @@
-package com.qr.generator.exception;
+package com.qr.generator.exceptions;
 
 public class QrGenerationException extends Exception {
 
