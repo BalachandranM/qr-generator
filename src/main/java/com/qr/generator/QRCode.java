@@ -52,7 +52,6 @@ public class QRCode {
 	private int finderPatternSize;
 	private float qrScaleDownFactor;
 	private String data;
-	private ErrorCorrectionLevel errorCorrectionLevel;
 	private Map<EncodeHintType, Object> encodingHints;
 	private Shape qrShape;
 	private Shape finderPatternShape;
@@ -81,7 +80,6 @@ public class QRCode {
 		overlayRatio = builder.overlayRatio;
 		overlayImage = builder.overlayImage;
 		overlayTransparency = builder.overlayTransparency;
-		errorCorrectionLevel = builder.errorCorrectionLevel;
 		finderPatternSize = builder.finderPatternSize;
 		qrScaleDownFactor = builder.qrScaleDownFactor;
 		qrShape = builder.qrShape;
@@ -91,7 +89,10 @@ public class QRCode {
 	private BufferedImage encode() throws QrGenerationException {
 		BufferedImage encodedImage;
 		try {
-			encodedImage = renderQRImage(Encoder.encode(data, errorCorrectionLevel, encodingHints));
+//			BitMatrix matrix = new QRCodeWriter().encode(data, BarcodeFormat.QR_CODE, width, height, encodingHints);
+//			encodedImage = MatrixToImageWriter.toBufferedImage(matrix);
+			encodedImage = renderQRImage(Encoder.encode(data, (ErrorCorrectionLevel) encodingHints
+					.getOrDefault(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H), encodingHints));
 			encodedImage = overlay ? setOverlayImage(encodedImage) : encodedImage;
 		} catch (Exception e) {
 			throw new QrGenerationException("QRCode could not be generated", e);
@@ -265,7 +266,7 @@ public class QRCode {
 		private Color finderPatternOuterColor = Color.BLACK.darker().brighter();
 		private Color finderPatternMedianColor = Color.WHITE.darker().brighter();
 		private Color finderPatternInnerColor = Color.BLACK.darker().brighter();
-		private int finderPatternSize = 7;
+		private int finderPatternSize = 15;
 		private float qrScaleDownFactor = 0.95f;
 		private Shape qrShape = Shape.RECTANGLE;
 		private Shape finderPatternShape = Shape.RECTANGLE;
@@ -274,7 +275,6 @@ public class QRCode {
 		private boolean overlay = false;
 		private String data;
 		private byte[] overlayImage;
-		private ErrorCorrectionLevel errorCorrectionLevel = ErrorCorrectionLevel.H;
 
 		private Builder() {
 		}
@@ -344,11 +344,6 @@ public class QRCode {
 			return this;
 		}
 
-		public Builder withErrorCorrectionLevel(ErrorCorrectionLevel errorCorrectionLevel) {
-			this.errorCorrectionLevel = errorCorrectionLevel;
-			return this;
-		}
-
 		public Builder withQrScaleDownFactor(Float scaleDownFactor) {
 			this.qrScaleDownFactor = scaleDownFactor;
 			return this;
@@ -376,7 +371,7 @@ public class QRCode {
 
 		private Map<EncodeHintType, Object> defaultEncodeHints() {
 			Map<EncodeHintType, Object> encodeHints = new EnumMap<>(EncodeHintType.class);
-			encodeHints.put(EncodeHintType.ERROR_CORRECTION, errorCorrectionLevel);
+			encodeHints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
 			encodeHints.put(EncodeHintType.CHARACTER_SET, StandardCharsets.UTF_8.name());
 			return encodeHints;
 		}
